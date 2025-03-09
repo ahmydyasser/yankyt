@@ -91,6 +91,8 @@ func main() {
 		outputDir, _ = os.Getwd()
 	}
 
+	log.Println("[INFO] Fetching playlist metadata...")
+
 	// Run yt-dlp command to get the playlist JSON
 	cmd := exec.Command("yt-dlp", "--flat-playlist", "-J", *playlistURLFlag)
 	output, err := cmd.Output()
@@ -104,6 +106,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error parsing JSON: %v", err)
 	}
+
+	log.Printf("[INFO] Found %d videos, checking for existing files...", len(playlist.Entries))
 
 	// Make directory called by Playlist.Title
 	dirName := playlist.Title + "_BY_" + playlist.Channel
@@ -149,6 +153,8 @@ func main() {
 		}
 	}
 
+	log.Println("[INFO] Downloading missing videos with aria2c...")
+
 	// Function to download a video
 	downloadVideo := func(entry VideoEntry, wg *sync.WaitGroup) {
 		defer wg.Done()
@@ -186,7 +192,8 @@ func main() {
 
 	// Wait for all downloads to complete
 	wg.Wait()
-	log.Println("All downloads complete.")
+
+	log.Println("[SUCCESS] Download complete! 🎉")
 
 	// Send a desktop notification
 	err = exec.Command("notify-send", "Download Complete", "All videos have been downloaded.").Run()
@@ -194,4 +201,3 @@ func main() {
 		log.Printf("Error sending notification: %v", err)
 	}
 }
-
