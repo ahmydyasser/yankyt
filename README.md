@@ -37,7 +37,7 @@ sudo apt install yt-dlp aria2 notify-send
 You can install _yankyt_ directly using the `go install` command:
 
 ```sh
-go install github.com/ahmydyasser/yankyt
+go install github.com/ahmydyasser/yankyt@latest
 ```
 
 If you want to install a specific version, tag your release (e.g., `v1.0.0`) and then install it like so:
